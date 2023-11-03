@@ -30,7 +30,7 @@ class HBNBCommand(cmd.Cmd):
         if not arg:
             print("** class name missing **")
         elif arg == "BaseModel":
-            bs = BaseModel()
+            bs = eval(f"{arg}()")
             bs.save()
             print(f"{bs.id}")
         else:
