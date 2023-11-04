@@ -50,7 +50,9 @@ class HBNBCommand(cmd.Cmd):
             print(HBNBCommand.__CLS_NAME_MISSING)
         elif args[0] != HBNBCommand.__BASE_MODEL:
             print(HBNBCommand.__CLS_NOT_EXIST)
-        elif args[0] == HBNBCommand.__BASE_MODEL and args[1]:
+        elif len(args) <= 1:
+            print(HBNBCommand.__ID_MISSING)
+        else:
             bms = storage.all()
             for bs in bms.values():
                 if bs.id == args[1]:
