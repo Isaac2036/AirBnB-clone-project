@@ -51,10 +51,10 @@ class HBNBCommand(cmd.Cmd):
         elif args[0] != HBNBCommand.__BASE_MODEL:
             print(HBNBCommand.__CLS_NOT_EXIST)
         elif args[0] == HBNBCommand.__BASE_MODEL and args[1]:
-            objs = storage.all()
-            for obj in objs.values():
-                if obj.id == args[1]:
-                    print(obj)
+            bms = storage.all()
+            for bs in bms.values():
+                if bs.id == args[1]:
+                    print(bs)
                     break
             else:
                 print(HBNBCommand.__NO_INST_FOUND)
