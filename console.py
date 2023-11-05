@@ -53,6 +53,7 @@ class HBNBCommand(cmd.Cmd):
         elif len(args) <= 1:
             print(HBNBCommand.__ID_MISSING)
         else:
+            storage.reload()
             bms = storage.all()
             for bs in bms.values():
                 if bs.id == args[1]:
@@ -62,10 +63,39 @@ class HBNBCommand(cmd.Cmd):
                 print(HBNBCommand.__NO_INST_FOUND)
 
     def do_destroy(self, arg):
-        pass
+        args = arg.split()
+
+        if not args:
+            print(HBNBCommand.__CLS_NAME_MISSING)
+        elif args[0] != HBNBCommand.__BASE_MODEL:
+            print(HBNBCommand.__CLS_NOT_EXIST)
+        elif len(args) <= 1:
+            print(HBNBCommand.__ID_MISSING)
+        else:
+            storage.reload()
+            bms = storage.all()
+            for k, bs in bms.items():
+                if args[1] == bs.id:
+                    del bms[k]
+                    break
+            # storage.save()
+            else:
+                print(HBNBCommand.__NO_INST_FOUND)
 
     def do_all(self, arg):
-        pass
+        args = arg.split()
+
+        if not args:
+            storage.reload()
+            bms = storage.all()
+            print([str(bs) for bs in bms.values()])
+        elif len(args) == 1:
+            if args[0] != HBNBCommand.__BASE_MODEL:
+                print(HBNBCommand.__CLS_NOT_EXIST)
+            else:
+                storage.reload()
+                bms = storage.all()
+                print([str(bs) for bs in bms.values()])
 
     def do_update(self, arg):
         pass
