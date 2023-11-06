@@ -23,24 +23,6 @@ de los elementos para luego agregarlo al final de la lista resultante
 """
 
 
-def parse(arg):
-    dot1 = re.search(r"\{(.*?)\}", arg)
-    dot2 = re.search(r"\[(.*?)\]", arg)
-    if dot1 is None:
-        if dot2 is None:
-            return [i.strip(",") for i in split(arg)]
-        else:
-            hbn = split(arg[:dot2.span()[0]])
-            retl = [i.strip(",") for i in hbn]
-            retl.append(dot2.group())
-            return retl
-    else:
-        hbn = split(arg[:dot1.span()[0]])
-        retl = [i.strip(",") for i in hbn]
-        retl.append(dot1.group())
-        return retl
-
-
 class HBNBCommand(cmd.Cmd):
     """
     Esta clase hereda de cmd.Cmd, desde aqui se gestionará
@@ -58,31 +40,15 @@ class HBNBCommand(cmd.Cmd):
         "Review"
     }
 
-    def default(self, arg):
+    def default(self, commandline):
         """Sintaxis por defecto del modulo cmd si la entrada no es valida"""
-        argdict = {
-            "all": self.do_all,
-            "show": self.do_show,
-            "destroy": self.do_destroy,
-            "update": self.do_update
-        }
-        match = re.search(r"\.", arg)
-        if match is not None:
-            argl = [arg[:match.span()[0]], arg[match.span()[1]:]]
-            match = re.search(r"\((.*?)\)", argl[1])
-            if match is not None:
-                command = [argl[1][:match.span()[0]], match.group()[1:-1]]
-                if command[0] in argdict.keys():
-                    call = "{} {}".format(argl[0], command[1])
-                    return argdict[command[0]](call)
-        print("*** Unknown syntax: {}".format(arg))
-        return False
+        print(f"*** Unknown syntax: {commandline}")
 
-    def do_quit(self, arg):
+    def do_quit(self, commandline):
         """Quit command to exit the program\n"""
         return True
 
-    def do_EOF(self, arg):
+    def do_EOF(self, commandline):
         """EOF signal to exit the program"""
         print("")
         return True
@@ -90,11 +56,11 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         pass
 
-    def do_create(self, arg):
+    def do_create(self, commandline):
         """Uso: create <class>
         Crea una nueva instancia y muestra el id.
         """
-        argl = parse(arg)
+        argl = commandline.split()
         if len(argl) == 0:
             print("** class name missing **")
         elif argl[0] not in HBNBCommand.__classes:
@@ -103,11 +69,11 @@ class HBNBCommand(cmd.Cmd):
             print(eval(argl[0])().id)
             storage.save()
 
-    def do_show(self, arg):
+    def do_show(self, commandline):
         """Usando: show <class> <id> or <class>.show(<id>)
         Muestra la representación en string de la clase con su id
         """
-        argl = parse(arg)
+        argl = commandline.split()
         objdict = storage.all()
         if len(argl) == 0:
             print("** class name missing **")
@@ -120,10 +86,10 @@ class HBNBCommand(cmd.Cmd):
         else:
             print(objdict["{}.{}".format(argl[0], argl[1])])
 
-    def do_destroy(self, arg):
+    def do_destroy(self, commandline):
         """Usage: destroy <class> <id> or <class>.destroy(<id>)
         Delete a class instance of a given id."""
-        argl = parse(arg)
+        argl = commandline.split()
         objdict = storage.all()
         if len(argl) == 0:
             print("** class name missing **")
@@ -137,11 +103,11 @@ class HBNBCommand(cmd.Cmd):
             del objdict["{}.{}".format(argl[0], argl[1])]
             storage.save()
 
-    def do_all(self, arg):
+    def do_all(self, commandline):
         """Usage: all or all <class> or <class>.all()
         Display string representations of all instances of a given class.
         If no class is specified, displays all instantiated objects."""
-        argl = parse(arg)
+        argl = commandline.split()
         if len(argl) > 0 and argl[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
         else:
@@ -153,14 +119,14 @@ class HBNBCommand(cmd.Cmd):
                     objl.append(obj.__str__())
             print(objl)
 
-    def do_update(self, arg):
+    def do_update(self, commandline):
         """Usando: update <class> <id> <attribute_name> <attribute_value> or
        <class>.update(<id>, <attribute_name>, <attribute_value>) o
        <class>.update(<id>, <dictionary>)
         Actualiza la instancia de la clase de la id señalada añadiendo o
         actualizando un determinado
         par clave/valor de atributo o diccionario."""
-        argl = parse(arg)
+        argl = commandline.split()
         objdict = storage.all()
 
         if len(argl) == 0:
