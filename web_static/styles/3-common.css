@@ -1,11 +1,7 @@
-header {
-    background-color: white;
-    height: 70px;
-    width: 100%;
-    border-bottom: 1px solid #CCCCCC;
-    background-image: url(../images/logo.png);
-    background-repeat: no-repeat;
-}
-header.logo {
-    margin-left: 20px;
+body {
+    margin: 0px;
+    padding: 0px;
+    color: #484848;
+    font-size: 14px;
+    font-family: Circular,"Helvetica Neue",Helvetica,Arial,sans-serif;
 }
